@@ -4,10 +4,13 @@
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
+const QRCode = require('qrcode');
+require('dotenv').config();  // Add this line to load .env file
 
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 'localhost';
 
 // Add logging middleware
 app.use(morgan(':remote-addr - :method :url :status :response-time ms'));
@@ -153,7 +156,76 @@ app.get('/test', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'test.html'));
 });
 
+// Generate QR code when server starts
+async function generateQRCode() {
+  const serverUrl = `http://${HOST}:${PORT}`;
+  try {
+    // Generate QR code and save it to public directory
+    await QRCode.toFile(
+      path.join(__dirname, 'public', 'qr.png'),
+      serverUrl,
+      {
+        width: 400,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      }
+    );
+    console.log(`QR Code generated for ${serverUrl}/qr`);
+  } catch (err) {
+    console.error('Failed to generate QR code:', err);
+  }
+}
+
+// Generate WiFi QR code when server starts
+async function generateWiFiQRCode() {
+  try {
+    const { WIFI_SSID, WIFI_PASSWORD, WIFI_ENCRYPTION = 'WPA' } = process.env;
+    
+    if (!WIFI_SSID || !WIFI_PASSWORD) {
+      console.error('WiFi QR Code generation skipped: Missing WIFI_SSID or WIFI_PASSWORD in .env');
+      return;
+    }
+
+    // WiFi QR code format: WIFI:T:<encryption>;S:<ssid>;P:<password>;;
+    const wifiString = `WIFI:T:${WIFI_ENCRYPTION};S:${WIFI_SSID};P:${WIFI_PASSWORD};;`;
+    
+    await QRCode.toFile(
+      path.join(__dirname, 'public', 'wifi.png'),
+      wifiString,
+      {
+        width: 400,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      }
+    );
+    console.log(`WiFi QR Code generated for ${HOST}:${PORT}/wifi`);
+  } catch (err) {
+    console.error('Failed to generate WiFi QR code:', err);
+  }
+}
+
+// Add route to serve QR code page
+app.get('/qr', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'qr.html'));
+});
+
+// Add route to serve WiFi QR code page
+app.get('/wifi', (req, res) => {
+  if (!process.env.WIFI_SSID || !process.env.WIFI_PASSWORD) {
+    return res.status(404).send('WiFi configuration not available');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'wifi.html'));
+});
+
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running at http://${HOST}:${PORT}`);
+  generateQRCode();
+  generateWiFiQRCode();
 });

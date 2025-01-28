@@ -40,4 +40,7 @@ coverage/
 
 # Production build
 dist/
-build/ 
+build/
+
+# Generated QR codes
+public/*.png 

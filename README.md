@@ -6,6 +6,7 @@ A simple web application for workshops that allows participants to draw random c
 
 - One-time random concept drawing per user
 - Persistent results across page reloads
+- QR code access for easy mobile participation
 - Color-coded categories:
   - Timor-Leste (Green)
   - Entrepreneurship (Blue)
@@ -19,6 +20,14 @@ A simple web application for workshops that allows participants to draw random c
 - Node.js (v12 or higher)
 - npm (comes with Node.js)
 
+## Environment Variables
+
+- `PORT` - Server port (default: 3000)
+- `HOST` - Server host (default: 'localhost')
+- `WIFI_SSID` - WiFi network name
+- `WIFI_PASSWORD` - WiFi password
+- `WIFI_ENCRYPTION` - WiFi encryption type (WPA, WEP, or empty for none)
+
 ## Installation
 
 1. Clone the repository:
@@ -31,6 +40,16 @@ A simple web application for workshops that allows participants to draw random c
    ```bash
    npm install
    ```
+
+3. Copy `.env.example` to `.env` and configure your settings
+
+4. Receive your unique concept
+5. The background will change color based on the concept category
+6. Your concept persists until the server restarts
+
+Access the QR code at `/qr` to easily share the application with participants.
+
+## Testing
 
 ## Running the Application
 
@@ -69,6 +88,8 @@ random-concept-draw/
 3. Receive your unique concept
 4. The background will change color based on the concept category
 5. Your concept persists until the server restarts
+
+Access the QR code at `/qr` to easily share the application with participants.
 
 ## Testing
 
