@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Test: Random Concept Draw</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+      .history {
+        position: fixed;
+        top: 0;
+        right: 0;
+        padding: 1em;
+        background: rgba(0,0,0,0.1);
+        max-height: 100vh;
+        overflow-y: auto;
+        font-size: 0.8em;
+      }
+      .history-item {
+        margin: 0.5em 0;
+        padding: 0.5em;
+        background: rgba(255,255,255,0.9);
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <button id="drawButton" onclick="drawConcept()">DRAW A CONCEPT</button>
+      <div id="result"></div>
+    </main>
+    <div class="history" id="history">
+      <h3>Draw History</h3>
+    </div>
+    <footer>
+      MOVE Entrepreneurship Workshop | Catalpa International
+    </footer>
+    <script>
+      async function drawConcept() {
+        try {
+          const response = await fetch('/test/draw');
+          const data = await response.json();
+          
+          if (data.concept) {
+            // Show result
+            const resultElement = document.getElementById('result');
+            resultElement.style.display = 'block';
+            resultElement.innerText = data.concept;
+            
+            // Change background color
+            document.body.style.backgroundColor = data.color;
+            
+            // Add to history
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerText = `${data.concept} (${data.remaining} remaining)`;
+            document.getElementById('history').appendChild(historyItem);
+          } else {
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').innerText = "No more concepts left!";
+            document.getElementById('drawButton').style.display = 'none';
+          }
+        } catch (err) {
+          document.getElementById('result').style.display = 'block';
+          document.getElementById('result').innerText = "Error drawing concept.";
+        }
+      }
+    </script>
+  </body>
+</html> 

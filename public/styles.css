@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  transition: background-color 0.5s ease;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  font-size: 2em;
+  padding: 1em 1.5em;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #333;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+button:disabled {
+  opacity: 0;
+  cursor: not-allowed;
+}
+
+#result {
+  display: none;
+  font-size: 3em;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  padding: 0.5em;
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-size: 0.9em;
+} 
