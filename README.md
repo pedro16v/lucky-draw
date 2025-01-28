@@ -1,19 +1,40 @@
 # Random Concept Draw
 
-A simple web application for workshops that allows participants to draw random concepts across different categories: Timor-Leste, Entrepreneurship, Youth, and Sustainability. Each participant gets one unique concept, and the background color changes based on the concept category.
+A simple web application for workshop facilitators to distribute unique concepts to participants. Each participant scans a QR code to draw their own random concept from four categories: Timor-Leste, Entrepreneurship, Youth, and Sustainability. The background color changes based on the concept category, making it easy to identify which theme each participant got.
 
 ## Features
 
-- One-time random concept drawing per user
-- Persistent results across page reloads
-- QR code access for easy mobile participation
-- Color-coded categories:
+- One-time random concept drawing per user (based on IP address)
+- Persistent results across page reloads (until server restart)
+- QR codes for easy access:
+  - WiFi connection QR code
+  - Application access QR code
+- Color-coded concept categories:
   - Timor-Leste (Green)
   - Entrepreneurship (Blue)
   - Youth (Orange)
   - Sustainability (Yellow)
-- Test mode for trying out the system
+- Test mode for facilitators to try out the system
 - Simple, minimalist interface
+
+## Workshop Setup & Usage
+
+1. **Network Setup**
+   - Configure the `.env` file with your WiFi network details
+   - Start the server (see Running the Application below)
+   - Access `/wifi` to get the WiFi QR code
+   - Have all participants scan this code to join the same network
+
+2. **Application Access**
+   - Once participants are on the network, access `/qr` to get the application QR code
+   - Share this QR code with participants
+   - Each participant scans the code to access the application
+
+3. **Concept Drawing**
+   - Participants click the "DRAW A CONCEPT" button
+   - They receive a unique concept with a color-coded background
+   - The concept stays with them even if they reload the page
+   - Each IP address can only draw once until the server restarts
 
 ## Prerequisites
 
@@ -41,15 +62,9 @@ A simple web application for workshops that allows participants to draw random c
    npm install
    ```
 
-3. Copy `.env.example` to `.env` and configure your settings
-
-4. Receive your unique concept
-5. The background will change color based on the concept category
-6. Your concept persists until the server restarts
-
-Access the QR code at `/qr` to easily share the application with participants.
-
-## Testing
+3. Copy `.env.example` to `.env` and configure your settings:
+   - Set the HOST to your computer's local IP address
+   - Configure your WiFi network details
 
 ## Running the Application
 
@@ -59,37 +74,33 @@ Start the server:
 node index.js
 ```
 
-The application will be available at `http://localhost:3000`
-
-For testing purposes (unlimited draws), visit `http://localhost:3000/test`
+The server will:
+1. Generate QR codes for WiFi and application access
+2. Log the URLs for both QR codes
+3. Start listening for connections
 
 ## Project Structure
 
 ```
 random-concept-draw/
-├── index.js # Main server file
-├── public/ # Static files
-│ ├── index.html # Main page
-│ ├── test.html # Test page
-│ ├── styles.css # Styles
-│ └── script.js # Client-side JavaScript
-└── package.json # Project dependencies
+├── index.js          # Main server file
+├── public/           # Static files
+│   ├── index.html    # Main page
+│   ├── test.html    # Test page
+│   ├── wifi.html    # WiFi QR code page
+│   ├── qr.html      # App QR code page
+│   ├── styles.css   # Styles
+│   └── script.js    # Client-side JavaScript
+├── .env.example     # Example configuration
+└── package.json     # Project dependencies
 ```
 
 ## Dependencies
 
 - express - Web framework
 - morgan - HTTP request logger middleware
-
-## Usage
-
-1. Visit the main page
-2. Click the "DRAW A CONCEPT" button
-3. Receive your unique concept
-4. The background will change color based on the concept category
-5. Your concept persists until the server restarts
-
-Access the QR code at `/qr` to easily share the application with participants.
+- qrcode - QR code generation
+- dotenv - Environment configuration
 
 ## Testing
 
@@ -98,6 +109,8 @@ Use the test page at `/test` to:
 - See the draw history
 - Test the color-coding system
 - Verify the remaining count
+
+This is useful for facilitators to test the system before a workshop.
 
 ## Created for
 
